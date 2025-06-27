@@ -2,5 +2,5 @@ projectKey=equipo-validadorapp
 serverUrl=http://localhost:9000
 serverVersion=25.6.0.109173
 dashboardUrl=http://localhost:9000/dashboard?id=equipo-validadorapp
-ceTaskId=793a876b-6f02-4df0-83d8-e9e33b412e21
-ceTaskUrl=http://localhost:9000/api/ce/task?id=793a876b-6f02-4df0-83d8-e9e33b412e21
+ceTaskId=50d33b96-5cf0-44eb-8a53-bdcd471fc2a4
+ceTaskUrl=http://localhost:9000/api/ce/task?id=50d33b96-5cf0-44eb-8a53-bdcd471fc2a4
