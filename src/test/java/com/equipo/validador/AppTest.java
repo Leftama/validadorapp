@@ -3,8 +3,8 @@ package com.equipo.validador;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
+import static org.junit.Assert.*;
+
 import java.util.logging.Handler;
 import java.util.logging.Logger;
 import java.util.logging.LogRecord;
@@ -14,119 +14,175 @@ import java.util.List;
 
 public class AppTest {
     
-    // Para capturar los logs
+    private App app;
     private TestLogHandler testLogHandler;
     private Logger logger;
     
-    // Para capturar la salida del sistema
-    private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-    private final PrintStream originalOut = System.out;
-    
     @Before
     public void setUp() {
-        // Configurar captura de logs
-        logger = Logger.getLogger(App.class.getName());
+        app = new App();
+        logger = app.getLogger();
+        
+        // Configurar handler de test para capturar logs
         testLogHandler = new TestLogHandler();
         logger.addHandler(testLogHandler);
         logger.setLevel(Level.ALL);
         
-        // Configurar captura de salida del sistema
-        System.setOut(new PrintStream(outContent));
+        // Remover otros handlers para evitar ruido en consola durante tests
+        Handler[] handlers = logger.getHandlers();
+        for (Handler handler : handlers) {
+            if (handler != testLogHandler) {
+                logger.removeHandler(handler);
+            }
+        }
     }
     
     @After
     public void tearDown() {
-        // Limpiar después de cada test
-        logger.removeHandler(testLogHandler);
-        System.setOut(originalOut);
-        
-        // Limpiar variables de entorno simuladas
-        System.clearProperty("APP_USER");
+        if (testLogHandler != null) {
+            logger.removeHandler(testLogHandler);
+        }
     }
     
     /**
-     * Test para verificar el comportamiento cuando el usuario es "admin"
+     * Test: Usuario admin debe generar log INFO con mensaje de bienvenida
      */
     @Test
-    public void testMainConUsuarioAdmin() {
-        // Simular variable de entorno APP_USER = "admin" 
-        // Nota: Como System.getenv() es difícil de mockear, podríamos refactorizar
-        // el código para usar System.getProperty() en su lugar
+    public void testValidarUsuarioAdmin() {
+        // Ejecutar
+        app.validarYLogearUsuario("admin");
         
-        // Llamar al método main
-        String[] args = {};
+        // Verificar
+        List<LogRecord> logs = testLogHandler.getLogRecords();
+        assertEquals("Debería haber exactamente 1 log", 1, logs.size());
         
-        // Para este test, necesitaremos modificar ligeramente el código original
-        // o usar un enfoque diferente. Te muestro ambas opciones:
-        
-        // OPCIÓN 1: Test del comportamiento esperado (conceptual)
-        // Si el usuario fuera "admin", debería loggearse un mensaje INFO
-        
-        // Simulemos el comportamiento manualmente para demostrar el test
-        String usuarioTest = "admin";
-        if ("admin".equals(usuarioTest)) {
-            logger.info("¡Bienvenido administrador!");
-        }
-        
-        // Verificar que se registró el log correcto
-        List<LogRecord> logRecords = testLogHandler.getLogRecords();
-        assert logRecords.size() == 1 : "Debería haberse registrado exactamente un log";
-        assert logRecords.get(0).getLevel() == Level.INFO : "El nivel del log debería ser INFO";
-        assert logRecords.get(0).getMessage().contains("Bienvenido administrador") : 
-               "El mensaje debería contener 'Bienvenido administrador'";
+        LogRecord logRecord = logs.get(0);
+        assertEquals("El nivel debería ser INFO", Level.INFO, logRecord.getLevel());
+        assertTrue("El mensaje debería contener 'Bienvenido administrador'", 
+                   logRecord.getMessage().contains("Bienvenido administrador"));
     }
     
     /**
-     * Test para verificar el comportamiento cuando el usuario NO es "admin"
+     * Test: Usuario diferente a admin debe generar log WARNING
      */
     @Test
-    public void testMainConUsuarioNoAdmin() {
-        // Simular usuario diferente a "admin"
-        String usuarioTest = "usuario_normal";
-        if (!"admin".equals(usuarioTest)) {
-            logger.log(Level.WARNING, "Usuario no autorizado o variable de entorno no definida");
-        }
+    public void testValidarUsuarioNoAdmin() {
+        // Ejecutar
+        app.validarYLogearUsuario("usuario_normal");
         
-        // Verificar que se registró el log de WARNING
-        List<LogRecord> logRecords = testLogHandler.getLogRecords();
-        assert logRecords.size() == 1 : "Debería haberse registrado exactamente un log";
-        assert logRecords.get(0).getLevel() == Level.WARNING : "El nivel del log debería ser WARNING";
-        assert logRecords.get(0).getMessage().contains("Usuario no autorizado") : 
-               "El mensaje debería contener 'Usuario no autorizado'";
+        // Verificar
+        List<LogRecord> logs = testLogHandler.getLogRecords();
+        assertEquals("Debería haber exactamente 1 log", 1, logs.size());
+        
+        LogRecord logRecord = logs.get(0);
+        assertEquals("El nivel debería ser WARNING", Level.WARNING, logRecord.getLevel());
+        assertTrue("El mensaje debería contener 'Usuario no autorizado'", 
+                   logRecord.getMessage().contains("Usuario no autorizado"));
     }
     
     /**
-     * Test para verificar el comportamiento cuando la variable de entorno es null
+     * Test: Usuario null debe generar log WARNING
      */
     @Test
-    public void testMainConVariableEntornoNull() {
-        // Simular variable de entorno null
-        String usuarioTest = null;
-        if (!"admin".equals(usuarioTest)) {
-            logger.log(Level.WARNING, "Usuario no autorizado o variable de entorno no definida");
-        }
+    public void testValidarUsuarioNull() {
+        // Ejecutar
+        app.validarYLogearUsuario(null);
         
-        // Verificar que se registró el log de WARNING
-        List<LogRecord> logRecords = testLogHandler.getLogRecords();
-        assert logRecords.size() == 1 : "Debería haberse registrado exactamente un log";
-        assert logRecords.get(0).getLevel() == Level.WARNING : "El nivel del log debería ser WARNING";
-        assert logRecords.get(0).getMessage().contains("variable de entorno no definida") : 
-               "El mensaje debería mencionar la variable de entorno";
+        // Verificar
+        List<LogRecord> logs = testLogHandler.getLogRecords();
+        assertEquals("Debería haber exactamente 1 log", 1, logs.size());
+        
+        LogRecord logRecord = logs.get(0);
+        assertEquals("El nivel debería ser WARNING", Level.WARNING, logRecord.getLevel());
+        assertTrue("El mensaje debería contener 'Usuario no autorizado'", 
+                   logRecord.getMessage().contains("Usuario no autorizado"));
     }
     
     /**
-     * Test para verificar que el logger se inicializa correctamente
+     * Test: String vacío debe generar log WARNING
+     */
+    @Test
+    public void testValidarUsuarioVacio() {
+        // Ejecutar
+        app.validarYLogearUsuario("");
+        
+        // Verificar
+        List<LogRecord> logs = testLogHandler.getLogRecords();
+        assertEquals("Debería haber exactamente 1 log", 1, logs.size());
+        
+        LogRecord logRecord = logs.get(0);
+        assertEquals("El nivel debería ser WARNING", Level.WARNING, logRecord.getLevel());
+        assertTrue("El mensaje debería contener 'Usuario no autorizado'", 
+                   logRecord.getMessage().contains("Usuario no autorizado"));
+    }
+    
+    /**
+     * Test: Verificar que se pueden procesar múltiples usuarios
+     */
+    @Test
+    public void testMultiplesValidaciones() {
+        // Ejecutar múltiples validaciones
+        app.validarYLogearUsuario("admin");
+        app.validarYLogearUsuario("usuario1");
+        app.validarYLogearUsuario("admin");
+        
+        // Verificar
+        List<LogRecord> logs = testLogHandler.getLogRecords();
+        assertEquals("Debería haber exactamente 3 logs", 3, logs.size());
+        
+        // Verificar primer log (admin)
+        assertEquals("Primer log debería ser INFO", Level.INFO, logs.get(0).getLevel());
+        
+        // Verificar segundo log (usuario1)
+        assertEquals("Segundo log debería ser WARNING", Level.WARNING, logs.get(1).getLevel());
+        
+        // Verificar tercer log (admin nuevamente)
+        assertEquals("Tercer log debería ser INFO", Level.INFO, logs.get(2).getLevel());
+    }
+    
+    /**
+     * Test: Verificar que el logger se inicializa correctamente
      */
     @Test
     public void testLoggerInicializacion() {
-        Logger appLogger = Logger.getLogger(App.class.getName());
-        assert appLogger != null : "El logger no debería ser null";
-        assert appLogger.getName().equals("com.equipo.validador.App") : 
-               "El nombre del logger debería ser el nombre completo de la clase";
+        Logger appLogger = app.getLogger();
+        assertNotNull("El logger no debería ser null", appLogger);
+        assertEquals("El nombre del logger debería ser correcto", 
+                     "com.equipo.validador.App", appLogger.getName());
     }
     
     /**
-     * Handler personalizado para capturar logs en los tests
+     * Test: Verificar el método procesarUsuario (integración)
+     */
+    @Test
+    public void testProcesarUsuario() {
+        // Crear una versión extendida para controlar el usuario
+        App testApp = new App() {
+            @Override
+            protected String obtenerUsuario() {
+                return "admin"; // Simular que la variable de entorno es "admin"
+            }
+        };
+        
+        // Configurar logger para esta instancia
+        Logger testLogger = testApp.getLogger();
+        TestLogHandler testHandler = new TestLogHandler();
+        testLogger.addHandler(testHandler);
+        
+        // Ejecutar
+        testApp.procesarUsuario();
+        
+        // Verificar
+        List<LogRecord> logs = testHandler.getLogRecords();
+        assertEquals("Debería haber exactamente 1 log", 1, logs.size());
+        assertEquals("El nivel debería ser INFO", Level.INFO, logs.get(0).getLevel());
+        
+        // Limpiar
+        testLogger.removeHandler(testHandler);
+    }
+    
+    /**
+     * Handler personalizado para capturar logs durante las pruebas
      */
     private static class TestLogHandler extends Handler {
         private final List<LogRecord> logRecords = new ArrayList<>();
