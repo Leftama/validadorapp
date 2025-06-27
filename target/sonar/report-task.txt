@@ -2,5 +2,5 @@ projectKey=validadorapp-cras
 serverUrl=http://localhost:9000
 serverVersion=25.6.0.109173
 dashboardUrl=http://localhost:9000/dashboard?id=validadorapp-cras
-ceTaskId=c431569f-3a75-4dfc-8b23-4e5534974b50
-ceTaskUrl=http://localhost:9000/api/ce/task?id=c431569f-3a75-4dfc-8b23-4e5534974b50
+ceTaskId=7216ff50-bdad-4527-a3f2-abb2a4a4a60e
+ceTaskUrl=http://localhost:9000/api/ce/task?id=7216ff50-bdad-4527-a3f2-abb2a4a4a60e
