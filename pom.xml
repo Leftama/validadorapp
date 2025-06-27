@@ -20,10 +20,17 @@
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+    <!-- Configuración SonarQube LOCAL -->
+        <sonar.projectKey>equipo-validadorapp</sonar.projectKey>
+        <sonar.projectName>Validador App</sonar.projectName>
+        <sonar.host.url>http://localhost:9000</sonar.host.url>
+
   </properties>
 
   <build>
  		<plugins>
+    
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -33,11 +40,13 @@
           <target>17</target>
         </configuration>
       </plugin>
+
  			<plugin>
  				<groupId>org.sonarsource.scanner.maven</groupId>
  				<artifactId>sonar-maven-plugin</artifactId>
  				<version>5.1.0.4751</version>
  			</plugin>
+
   	</plugins>
 	</build>
   
