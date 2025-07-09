@@ -1,0 +1,22 @@
+# Maven output
+/target/
+
+# IDE config
+*.iml
+.idea/
+*.classpath
+*.project
+.settings/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# VS Code
+.vscode/
+
+# Maven wrapper
+.mvn/
