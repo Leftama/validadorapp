@@ -1,13 +1,10 @@
 package com.equipo.validador;
-
-/**
- * Hello world!
- *
- */
-public class App 
-{
-    public static void main( String[] args )
-    {
-        System.out.println( "Hello World!" );
-    }
+public class App {
+ public static void main(String[] args) {
+ 	String usuario = "admin";
+ 	String contraseña = "123456"; // Hardcoded credentials
+ 	if (usuario.equals("admin")) {
+ 		System.out.println("¡Bienvenido administrador!");
+ 	}	
+ }
 }
