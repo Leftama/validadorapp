@@ -25,7 +25,7 @@ Proyecto Java 17 + Maven para practicar análisis estático de código y detecci
 
 ## Estructura del Proyecto
 
-../validadorapp/
+```../validadorapp/
 ├── pom.xml
 ├── README.md
 ├── src
@@ -43,6 +43,7 @@ Proyecto Java 17 + Maven para practicar análisis estático de código y detecci
 │                       └── AppTest.java
 └── target
 
+```
 
 ---
 
