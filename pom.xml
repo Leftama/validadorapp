@@ -44,12 +44,18 @@
           <target>17</target>
         </configuration>
       </plugin>
+
+      <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>3.2.5</version> <!-- Última versión -->
+      </plugin>
       
       <!-- Para ejecutar la aplicación con maven -->
       <plugin>
         <groupId>org.sonarsource.scanner.maven</groupId>
         <artifactId>sonar-maven-plugin</artifactId>
-        <version>3.11.0</version> <!-- Última versión estable del plugin -->
+        <version>3.11.0.3926</version> <!-- Última versión estable del plugin -->
       </plugin>
 
     </plugins>
