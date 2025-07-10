@@ -174,3 +174,70 @@ Alternativamente, puedes crear Pull Requests en GitHub.
 
 ## Repositorio remoto
 https://github.com/Leftama/validadorapp.git
+
+---
+
+## Preguntas finales
+
+### ✅ ¿Qué tipo de errores detectó SonarQube que podrían haber pasado desapercibidos?
+
+Durante el análisis estático de `validadorapp`, SonarQube identificó:
+
+- **Vulnerabilidades de seguridad**, como credenciales hardcodeadas (`"123456"`), difíciles de detectar en tiempo de ejecución, pero peligrosas en producción.
+- **Code smells** (malas prácticas), como estructuras inseguras, condiciones innecesarias o comparaciones incorrectas.
+- **Bugs potenciales** que podrían ocasionar errores lógicos futuros.
+- **Duplicación de código** (si aplica), que afecta la mantenibilidad.
+
+> SonarQube destaca riesgos aún cuando el código compila y ejecuta correctamente.
+
+---
+
+### ¿Qué ventajas tiene el análisis estático respecto al dinámico?
+
+| Análisis Estático (SonarQube)          | Análisis Dinámico (Pruebas / Ejecución)   |
+|----------------------------------------|--------------------------------------------|
+| No requiere ejecutar el código         | Requiere ejecutar el programa              |
+| Detecta problemas de diseño, bugs y seguridad | Detecta errores en tiempo de ejecución |
+| Cobertura total del código analizado   | Depende de los datos de prueba             |
+| Preventivo: evita problemas futuros    | Correctivo: detecta errores existentes     |
+| Automatizable en CI/CD                 | Más costoso en tiempo y recursos           |
+
+El análisis estático permite identificar y corregir vulnerabilidades **antes de desplegar o probar**, fortaleciendo la calidad desde la etapa de desarrollo.
+
+---
+
+### ¿Cómo impacta SonarQube en la calidad del software antes del despliegue?
+
+SonarQube mejora la calidad antes del despliegue al:
+
+- ✅ Detectar código inseguro, duplicado o mal diseñado.
+- ✅ Ayudar al equipo a escribir mejor código de forma continua.
+- ✅ Evitar que malas prácticas lleguen a producción.
+- ✅ Servir como filtro de calidad mediante **Quality Gates**.
+- ✅ Integrarse fácilmente en flujos DevOps y pipelines CI/CD.
+
+> En entornos profesionales, SonarQube se convierte en un aliado clave para mantener estándares de calidad sostenibles.
+
+---
+
+### 🛠️ ¿Qué políticas o reglas personalizarías según el tipo de proyecto?
+
+Dependerá del dominio y criticidad del software:
+
+#### Proyectos críticos (salud, finanzas):
+- Reglas de seguridad estrictas (sin credenciales hardcodeadas).
+- Tolerancia cero a bugs de alta severidad.
+- Reglas obligatorias de cobertura mínima y calidad estructural.
+- Integración con pipelines bloqueantes si falla el Quality Gate.
+
+#### Proyectos web:
+- Enfoque en validación de entrada/salida (XSS, SQLi).
+- Buenas prácticas REST y separación de capas.
+- Prevención de duplicación y estructuras confusas.
+
+#### 📚 Proyectos educativos (como `validadorapp`):
+- Reglas centradas en **seguridad básica y mantenibilidad**.
+- Flexibilidad para explorar y aprender de los errores.
+- Uso de SonarQube como herramienta formativa y de retroalimentación.
+
+---
