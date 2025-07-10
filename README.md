@@ -173,4 +173,4 @@ Alternativamente, puedes crear Pull Requests en GitHub.
 ---
 
 ## Repositorio remoto
-https://github.com/leftaman/validadorapp.git
+https://github.com/Leftama/validadorapp.git
